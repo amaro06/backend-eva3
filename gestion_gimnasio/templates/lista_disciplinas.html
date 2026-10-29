@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>listado de disciplinas</title>
+</head>
+<body>
+    <h1>Disciplinas disponibles</h1>
+    <form method="get"></form>
+    <ul>
+        {% for disciplina in disciplinas %}
+
+        <li>
+            {{disciplina.nombre}}
+        </li>
+            {% empty %}
+            <li> No hay disciplinas registradas </li>
+            
+        {% endfor %}
+    </ul>
+    
+</body>
+</html>

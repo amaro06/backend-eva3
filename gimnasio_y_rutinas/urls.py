@@ -27,5 +27,7 @@ urlpatterns = [
     path('disciplinas/crear/', gestion_view.crear_disciplina, name='crear_disciplina'),
     path('disciplinas/editar/<int:pk>/', gestion_view.editar_disciplina, name='editar_disciplina'),
     path('disciplinas/eliminar/<int:pk>/', gestion_view.eliminar_disciplina, name='eliminar_disciplina'),
+    path('disciplinas/', gestion_view.lista_disciplinas, name='lista_disciplinas'),
+    path('etiquetas/crear/', gestion_view.crear_etiqueta, name='crear_etiqueta'),
     
 ]

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Disciplina
+from .models import Disciplina, Etiqueta
 
 class DisciplinaForm(forms.ModelForm):
     class Meta:
@@ -7,4 +7,10 @@ class DisciplinaForm(forms.ModelForm):
         fields = [
             'nombre',
         ]
-        
+
+class EtiquetaForm(forms.ModelForm):
+    class Meta:
+        model = Etiqueta
+        fields = [
+            'nombre',
+        ]

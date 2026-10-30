@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from .forms import DisciplinaForm, EtiquetaForm
+from .forms import DisciplinaForm, EtiquetaForm, RutinaForm
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Disciplina, Etiqueta
+from .models import Disciplina, Etiqueta, Rutina
+
 
 # Create your views here.
 
@@ -68,10 +69,54 @@ def crear_etiqueta(request):
 
 @login_required
 def editar_etiqueta(request, pk):
-    pass
+    etiqueta = get_object_or_404(Etiqueta, pk=pk)
+    if request.method == 'POST':
+        form = EtiquetaForm(request.POST, instance=etiqueta)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = EtiquetaForm(instance=etiqueta)
+    return render(request, 'editar_etiqueta.html', {
+        'form':form
+    })
 
+@login_required
 def eliminar_etiqueta(request, pk):
-    pass
+    etiqueta = get_object_or_404(Etiqueta, pk=pk)
+    if request.method == 'POST':
+        etiqueta.delete()
+        return redirect('home')
+    return render(request, 'eliminar_etiqueta.html', {
+        'etiqueta':etiqueta
+    })
+
 
 def lista_etiquetas(request):
-    pass
+    etiqueta = Etiqueta.objects.all()
+    return render(request, 'lista_etiquetas.html', {
+        'etiqueta':etiqueta
+    })
+
+#-----------------------------------------------------------------------------#
+
+@login_required
+def crear_rutina(request):
+    if not request.user.groups.filter(name='Entrenador').exists():
+        return redirect('home')
+    
+    if request.method == 'POST':
+        form = RutinaForm(request.POST)
+
+        if form.is_valid():
+            rutina = form.save(commit=False)
+            rutina.entrenador = request.user
+            rutina.save()
+            form.save_m2m()
+            return redirect('home')
+    else:
+        form = RutinaForm()
+
+    return render(request, 'crear_rutina.html', {
+        'form':form
+    })

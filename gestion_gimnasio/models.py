@@ -18,14 +18,14 @@ class Etiqueta(models.Model):
 class Rutina(models.Model):
     titulo = models.CharField(max_length=100)
     descripcion = models.TextField()
-    duracion_min = models.IntegerField(
-        validators=[
+    duracion_min = models.IntegerField(            #limite de duracion de una rutina
+        validators=[                               
             MinValueValidator(10),
             MaxValueValidator(120),
             
         ]
     )
-    cupos = models.IntegerField(
+    cupos = models.IntegerField(                   #limite de cupos en una rutina
         validators=[
             
             MinValueValidator(1),

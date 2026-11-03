@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis rutinas</title>
+</head>
+<body>
+    <h1>Mis rutinas</h1>
+
+    <form method="get">
+        <input type="text" name="q" placeholder="Buscar rutina..." value="{{ q }}">
+        <select name="disciplina">
+            <option value="">Todas las disciplinas</option> 
+
+            {% for disciplina in disciplinas %}
+            <option value="{{ disciplina.pk }}"
+                {% if disciplina.pk|stringformat:s == disciplina_id %}selected{% endif %}
+            > {{ disciplina.nombre }} </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">buscar</button>
+
+        <a href="{% url 'crear_rutina' %}">Publicar nueva rutina</a>
+        <p>{{ rutinas.paginator.count }} rutina(s) encontrada(s).</p>
+
+        <ul>
+            {% for rutina in rutinas %}
+            <li>
+                {{ rutina.titulo }} - por {{ rutina.entrenador.username|default:"sin entrenador"}}
+                <p> {{ rutina.descripcion }}</p>
+                <p>Duracion: {{ rutina.duracion_min }} minutos </p>
+                <p>Cupos: {{ rutina.cupos }}</p>
+                <p>Nivel: {{ rutina.nivel }}</p>
+                <p>disciplina: {{ rutina.disciplina }}</p>
+
+                {% if rutina.entrenador == user %}
+                    <a href="{% url 'editar_rutina' rutina.pk%}">editar</a>
+                    <a href="{% url 'eliminar_rutina' rutina.pk%}">eliminar</a>
+                {% endif %}
+            </li>
+            {% empty %}
+            <p> No hay rutinas registradas </p>
+            {% endfor %}
+        </ul>
+
+        {% if rutinas.paginator.num_pages > 1 %}
+        <nav class="paginacion">
+            {% if rutinas.has_previous %}
+            <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ rutinas.previous_page_number }}"> Anterior </a>
+            {% endif %}
+
+            {% if rutinas.has_next %}
+            <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ rutinas.next_page_number }}"> Siguiente </a>
+            {% endif %}
+        {% endif %}
+
+
+        </nav>
+        
+
+    </form>
+    
+</body>
+</html>

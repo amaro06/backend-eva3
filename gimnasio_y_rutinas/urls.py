@@ -33,7 +33,9 @@ urlpatterns = [
     path('etiquetas/editar/<int:pk>/', gestion_view.editar_etiqueta, name='editar_etiqueta'),
     path('etiquetas/eliminar/<int:pk>', gestion_view.eliminar_etiqueta, name='eliminar_etiqueta'),
 
-    path('rutinas/crear/', gestion_view.crear_rutina, name='crear rutina'),
-    
+    path('rutinas/crear/', gestion_view.crear_rutina, name='crear_rutina'),
+    path('rutinas/editar/<int:pk>/', gestion_view.editar_rutina, name='editar_rutina'),
+    path('rutinas/eliminar/<int:pk>/', gestion_view.eliminar_rutina, name='eliminar_rutina'),
+    path('rutinas/', gestion_view.lista_rutinas, name='lista_rutinas'),
     
 ]

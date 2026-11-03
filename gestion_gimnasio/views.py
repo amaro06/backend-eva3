@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import DisciplinaForm, EtiquetaForm, RutinaForm
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Disciplina, Etiqueta, Rutina
+from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -102,7 +104,7 @@ def lista_etiquetas(request):
 
 @login_required
 def crear_rutina(request):
-    if not request.user.groups.filter(name='Entrenador').exists():
+    if not request.user.groups.filter(name='Entrenador').exists():        #si el usuario no es un entrenador lo redirige al inicio
         return redirect('home')
     
     if request.method == 'POST':
@@ -113,10 +115,72 @@ def crear_rutina(request):
             rutina.entrenador = request.user
             rutina.save()
             form.save_m2m()
-            return redirect('home')
+            return redirect('lista_rutinas')
     else:
         form = RutinaForm()
 
     return render(request, 'crear_rutina.html', {
         'form':form
+    })
+
+@login_required
+def editar_rutina(request, pk):
+    rutina = get_object_or_404(Rutina, pk=pk)
+
+    if rutina.entrenador != request.user:
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        form = RutinaForm(request.POST, instance=rutina)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_rutinas')
+    else:
+        form = RutinaForm(instance=rutina)
+    return render(request, 'editar_rutina.html', {
+        'form':form
+    })
+
+@login_required
+def eliminar_rutina(request, pk):
+    rutina = get_object_or_404(Rutina, pk=pk)
+
+    if rutina.entrenador != request.user:
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        rutina.delete()
+        return redirect('lista_rutinas')
+    return render(request, 'eliminar_rutina.html', {
+        'rutina':rutina
+    })
+
+
+def lista_rutinas(request):
+    q = request.GET.get('q', '').strip()
+
+    disciplina_id = request.GET.get('disciplina', '')
+    rutinas = Rutina.objects.filter(entrenador = request.user).order_by('titulo')
+
+    if q:
+        rutinas = rutinas.filter(
+            titulo__icontains=q
+        )
+
+    if disciplina_id.isdigit():
+        rutinas = rutinas.filter(
+            disciplina_id = disciplina_id
+        )
+    paginator = Paginator(rutinas, 2)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
+    params = request.GET.copy()
+    params.pop('page', None)
+
+    return render(request, 'lista_rutinas.html', {
+        'rutinas':page_obj,
+        'disciplinas':Disciplina.objects.all(),
+        'q':q,
+        'disciplina_id':disciplina_id,
+        'querystring':params.urlencode()
     })

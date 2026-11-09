@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %} editar inscripcion {% endblock %}
+
+    {% block content%}
+
+    <h1>Ediatr inscripcion</h1>
+    <form method="post">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">modificar</button>
+
+    </form>
+
+    {% endblock %}
+    

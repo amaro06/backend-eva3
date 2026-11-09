@@ -33,9 +33,21 @@ urlpatterns = [
     path('etiquetas/editar/<int:pk>/', gestion_view.editar_etiqueta, name='editar_etiqueta'),
     path('etiquetas/eliminar/<int:pk>', gestion_view.eliminar_etiqueta, name='eliminar_etiqueta'),
 
+    path('registro/', gestion_view.registro, name='registro'),
+
     path('rutinas/crear/', gestion_view.crear_rutina, name='crear_rutina'),
     path('rutinas/editar/<int:pk>/', gestion_view.editar_rutina, name='editar_rutina'),
     path('rutinas/eliminar/<int:pk>/', gestion_view.eliminar_rutina, name='eliminar_rutina'),
     path('rutinas/', gestion_view.lista_rutinas, name='lista_rutinas'),
+
+    path('inscripcion/crear', gestion_view.crear_inscripcion, name='crear_inscripcion'),
+    path('inscripcion/editar/<int:pk>', gestion_view.editar_inscripcion, name='editar_inscripcion'),
+    path('inscripcion/eliminar/<int:pk>', gestion_view.eliminar_inscripcion, name='eliminar_inscripcion'),
+    path('inscripciones/', gestion_view.lista_inscripciones, name='lista_inscripciones'),
+    path('mis-inscripciones/', gestion_view.mis_inscripciones, name='mis_inscripciones'),
+
+    path('inscripciones/<int:pk>/estado/', gestion_view.aceptar_rechazar_inscripcion, name='cambiar_estado'),
+    path('cambiar-contrasenia', gestion_view.CambiarPasswordView.as_view(), name='cambiar_contrasenia'),
+    path('perfil/', gestion_view.perfil, name='perfil')
     
 ]

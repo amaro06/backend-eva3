@@ -41,4 +41,18 @@ class Rutina(models.Model):
     def __str__(self):
         return self.titulo
 
+class Inscripcion(models.Model):
+
+    estados = [
+        ('pendiente', 'Pendiente'),
+        ('aceptada', 'Aceptada'),
+        ('rechazada', 'Reachazada'),
+    ]
+
+    comentario = models.TextField()
+    fecha = models.DateField(auto_now_add=True)
+    estado = models.CharField(max_length=10, choices=estados, default='pendiente')
+    socio = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inscripciones', null=True, blank=True)
+    rutina = models.ForeignKey(Rutina, on_delete=models.CASCADE, related_name='inscripciones')
+
 

@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>crear rutina</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block title %} crear rutina {% endblock %}
+
+    {% block content %}
     <h1>Pubicar rutina</h1>
     <form method="post">
 
@@ -16,6 +12,5 @@
         <button type="submit"> publicar </button>
 
     </form>
+    {% endblock %}
     
-</body>
-</html>

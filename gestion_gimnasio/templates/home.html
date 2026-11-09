@@ -1,13 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>gimnasio y rutinas</title>
-</head>
-<body>
-    <h1>Gimnasio y rutinas</h1>
-    <p>Bienvenido, gestione las rutinas del gimnacio</p>
+{% extends 'base.html' %}
+{% block title %} home {% endblock %}
+    {% block content %}
     
-</body>
-</html>
+    <form method="post"
+    action="{% url 'perfil' %}"> {% csrf_token %} 
+
+    <button type="submit" class="btn-primary">Mi perfil</button>
+    </form>
+    
+
+    <form 
+    method="post" 
+    action="{% url 'registro' %}">
+
+    {% csrf_token %}
+    
+    <button type="submit" class="btn-secondary">Registrarse</button>
+    </form>
+
+    <form 
+    method="post"
+    action="{% url 'login' %}">
+    
+    {% csrf_token %}
+    <button type="submit" class="btn-primary">Iniciar sesion</button>
+    </form>
+
+    <form 
+    method="post" 
+    action="{% url 'logout' %}">
+
+    {% csrf_token %}
+    
+    <button type="submit" class="btn-primary">Cerrar sesión</button>
+    </form>
+
+    <h1>Gimnasio y rutinas</h1>
+
+
+    <h2>Rutinas disponibles</h2>
+
+    <form method="get">
+
+         <input type="text" name="q" placeholder="Buscar rutina..." value="{{ q }}">
+        <select name="disciplina">
+            <option value="">Todas las disciplinas</option> 
+
+            {% for disciplina in disciplinas %}
+            <option value="{{ disciplina.pk }}"
+                {% if disciplina.pk|stringformat:s == disciplina_id %}selected{% endif %}
+            > {{ disciplina.nombre }} </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">buscar</button>
+
+    </form>
+
+        
+        <p>{{ rutinas.paginator.count }} rutina(s) encontrada(s).</p>
+        <ul>
+            {% for rutina in rutinas %}
+            <li>
+                <h3>{{ rutina.titulo }}</h3> - por {{ rutina.entrenador.username|default:"sin entrenador"}}
+                <p> {{ rutina.descripcion }}</p>
+                <p>Duracion: {{ rutina.duracion_min }} minutos </p>
+                <p>Cupos: {{ rutina.cupos }}</p>
+                <p>Nivel: {{ rutina.nivel }}</p>
+                <p>disciplina: {{ rutina.disciplina }}</p>
+                <p>etiqueta(s):
+                    {% for e in rutina.etiqueta.all %}
+                        {{e.nombre}}
+                        {% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        sin etiquetas asignadas
+                    {% endfor %}
+                </p>
+
+                <form method="post" action="{% url 'crear_inscripcion' %}">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="rutina" value="{{ rutina.pk }}">
+
+                    <button type="submit">Inscribirse</button>
+                </form>
+
+            </li>
+            {% empty %}
+            <p> No hay rutinas registradas </p>
+
+            {% endfor %}
+        </ul>
+
+        {% if rutinas.paginator.num_pages > 1 %}
+        <nav class="paginacion">
+            {% if rutinas.has_previous %}
+            <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ rutinas.previous_page_number }}"> Anterior </a>
+            {% endif %}
+
+            {% if rutinas.has_next %}
+            <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ rutinas.next_page_number }}"> Siguiente </a>
+            {% endif %}
+        {% endif %}
+        </nav>
+
+        {% endblock %}
+

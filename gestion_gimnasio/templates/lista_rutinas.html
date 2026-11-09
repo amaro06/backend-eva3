@@ -1,25 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis rutinas</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %} rutinas {% endblock %}
+    {% block content %}
+    <form 
+    method="post" 
+    action="{% url 'logout' %}">
+
+    {% csrf_token %}
+    
+    <button type="submit">Cerrar sesión</button>
+    </form>
+
     <h1>Mis rutinas</h1>
 
-    <form method="get">
+    <form method="get" >
         <input type="text" name="q" placeholder="Buscar rutina..." value="{{ q }}">
         <select name="disciplina">
             <option value="">Todas las disciplinas</option> 
-
+    
             {% for disciplina in disciplinas %}
             <option value="{{ disciplina.pk }}"
                 {% if disciplina.pk|stringformat:s == disciplina_id %}selected{% endif %}
             > {{ disciplina.nombre }} </option>
             {% endfor %}
         </select>
-
+    
         <button type="submit">buscar</button>
 
         <a href="{% url 'crear_rutina' %}">Publicar nueva rutina</a>
@@ -58,9 +62,11 @@
 
 
         </nav>
+
+        <a href="{% url 'perfil' %}">Volver</a>
+
         
 
     </form>
-    
-</body>
-</html>
+    {% endblock %}
+

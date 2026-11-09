@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %} inscripciones {% endblock %}
+    {% block content %}
+    <h1>Inscripciones</h1>
+
+    <form 
+    method="post" 
+    action="{% url 'logout' %}">
+
+    {% csrf_token %}
+    
+    <button type="submit">Cerrar sesión</button>
+    </form>
+    
+    <form method="get">
+
+        <input type="text" name="q" placeholder="buscar socio..." value="{{ q }}">
+
+    </form>
+    <ul>
+        {% for inscripcion in inscripciones %}
+        <li>
+            <h3>inscripcion realizada por: {{ inscripcion.socio.username }}</h3>
+            <p> comentario: {{ inscripcion.comentario }}</p>
+            <p> estado: {{ inscripcion.estado }} </p>
+            <p> rutina: {{ inscripcion.rutina }} </p>
+
+        </li>
+        
+
+        {% if inscripcion.estado == 'pendiente' %}
+        <form method="post" action="{% url 'cambiar_estado' inscripcion.pk %}">
+
+            {% csrf_token %}
+
+            <button type="submit" name="estado" value="aceptada"> Aceptar </button>
+            <button type="submit" name="estado" value="rechazada"> Rechazar </button>
+
+            {% endif %}
+
+        </form>
+
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'perfil' %}">volver</a>
+    {% endblock %}

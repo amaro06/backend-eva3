@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %} Mi perfil {% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Mi perfil</h2>
+    <p>Actualiza tu información personal.</p>
+
+    <p><strong>Usuario actual</strong> {{ user.username }} </p>
+    <p><strong>correo actual</strong> {{ user.email }} </p>
+
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">
+            Guardar cambios
+        </button>
+
+        
+
+        <a href="{% url 'cambiar_contrasenia' %}">cambiar contraseña</a>
+    </form>
+</div>
+
+<div>
+
+    {% if user.groups.all %}
+        {% for grupo in user.groups.all %}
+
+            {% if grupo.name == 'Entrenador' %}
+
+            <a href="{% url 'lista_rutinas' %}" class="btn-primary">Ver mis rutinas</a>
+            <a href="{% url 'lista_inscripciones' %}" class="btn-primary">ver inscripciones</a>
+            
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+    {% if user.groups.all %}
+        {% for grupo in user.groups.all %}
+
+            {% if grupo.name == 'Socio' %}
+
+            <a href="{% url 'mis_inscripciones' %}">Ver mis inscripciones</a>
+            
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+</div>
+
+    <a href="{% url 'home' %}" class="btn">
+            Volver
+        </a>
+
+    
+
+{% endblock %}

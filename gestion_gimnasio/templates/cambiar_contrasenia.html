@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %} cambiar contraseña {% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Cambiar contraseña</h2>
+    <p>Actualiza tu información personal.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">
+            Guardar cambios
+        </button>
+
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            Volver
+        </a>
+    </form>
+</div>
+
+{% endblock %}
